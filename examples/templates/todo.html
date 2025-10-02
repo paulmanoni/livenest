@@ -1,0 +1,174 @@
+<div class="todo-app">
+    <h1>📝 Todo List</h1>
+
+    <div class="todo-input">
+        <input
+            type="text"
+            id="newTodoInput"
+            placeholder="What needs to be done?"
+            lv-keyup="add"
+            lv-key="Enter"
+        />
+    </div>
+
+    <div class="todo-filters">
+        <button
+            class="{{if eq .filter "all"}}active{{end}}"
+            lv-click="filter"
+            lv-value-filter="all"
+        >All ({{len .todos}})</button>
+        <button
+            class="{{if eq .filter "active"}}active{{end}}"
+            lv-click="filter"
+            lv-value-filter="active"
+        >Active ({{.activeCount}})</button>
+        <button
+            class="{{if eq .filter "completed"}}active{{end}}"
+            lv-click="filter"
+            lv-value-filter="completed"
+        >Completed ({{.completedCount}})</button>
+    </div>
+
+    <ul class="todo-list">
+        {{range .filteredTodos}}
+        <li class="todo-item {{if .Completed}}completed{{end}}">
+            <input
+                type="checkbox"
+                {{if .Completed}}checked{{end}}
+                lv-click="toggle"
+                lv-value-id="{{.ID}}"
+            />
+            <span class="todo-text">{{.Text}}</span>
+            <button
+                class="delete-btn"
+                lv-click="delete"
+                lv-value-id="{{.ID}}"
+            >×</button>
+        </li>
+        {{end}}
+    </ul>
+
+    <div class="todo-footer">
+        <span>{{.activeCount}} item(s) left</span>
+        <button
+            class="clear-btn"
+            lv-click="clearCompleted"
+        >Clear Completed</button>
+    </div>
+</div>
+
+<style>
+    .todo-app {
+        max-width: 600px;
+        margin: 20px auto;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding: 30px;
+    }
+    .todo-app h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 30px;
+    }
+    .todo-input input {
+        width: 100%;
+        padding: 15px;
+        font-size: 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+    .todo-input input:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+    .todo-filters {
+        display: flex;
+        gap: 10px;
+        margin: 20px 0;
+    }
+    .todo-filters button {
+        flex: 1;
+        padding: 10px;
+        border: 2px solid #e0e0e0;
+        background: white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .todo-filters button.active {
+        background: #3498db;
+        color: white;
+        border-color: #3498db;
+    }
+    .todo-list {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+    }
+    .todo-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #e0e0e0;
+        gap: 15px;
+    }
+    .todo-item.completed .todo-text {
+        text-decoration: line-through;
+        color: #95a5a6;
+    }
+    .todo-item input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+    .todo-text {
+        flex: 1;
+        font-size: 16px;
+    }
+    .delete-btn {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        font-size: 20px;
+        line-height: 1;
+    }
+    .delete-btn:hover {
+        background: #c0392b;
+    }
+    .todo-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid #e0e0e0;
+    }
+    .clear-btn {
+        padding: 8px 15px;
+        background: #95a5a6;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .clear-btn:hover {
+        background: #7f8c8d;
+    }
+</style>
+
+<script>
+    // Handle Enter key for adding todos
+    document.getElementById('newTodoInput')?.addEventListener('keyup', function(e) {
+        if (e.key === 'Enter' && this.value.trim()) {
+            window.liveSocket.pushEvent('add', { text: this.value.trim() });
+            this.value = '';
+        }
+    });
+</script>

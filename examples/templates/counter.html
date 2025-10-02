@@ -1,0 +1,46 @@
+<div class="counter">
+    <h1>LiveView Counter (from template)</h1>
+    <div class="count-display">
+        <h2>Count: {{.count}}</h2>
+    </div>
+    <div class="buttons">
+        <button lv-click="decrement">-</button>
+        <button lv-click="reset">Reset</button>
+        <button lv-click="increment">+</button>
+    </div>
+</div>
+
+<style>
+    .counter {
+        font-family: Arial, sans-serif;
+        max-width: 400px;
+        margin: 50px auto;
+        text-align: center;
+        padding: 20px;
+        border: 2px solid #333;
+        border-radius: 10px;
+    }
+    .count-display {
+        margin: 30px 0;
+        font-size: 2em;
+        color: #2c3e50;
+    }
+    .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 1.2em;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #3498db;
+        color: white;
+        transition: background-color 0.3s;
+    }
+    button:hover {
+        background-color: #2980b9;
+    }
+</style>
