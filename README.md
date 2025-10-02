@@ -38,7 +38,8 @@ Build real-time, interactive web applications with the simplicity of server-side
 - **Flash Messages**: Built-in user notification system with success, error, info, and warning types
 - **Event Routing**: Automatic routing of events to `Handle*` methods using reflection
 - **Form Validation**: Client-side and server-side validation support
-- **Component System**: Reusable components with `<component>` tag support
+- **Component System**: Reusable components with `<lv-component>` web component tag
+- **Template Components**: File-based templates with `TemplateComponent` base class
 
 ## Project Structure
 
@@ -89,27 +90,34 @@ func main() {
 
 ## LiveView Example
 
-Create an interactive counter component:
+Create an interactive counter component with automatic event routing:
 
 ```go
-type CounterComponent struct{}
+type CounterComponent struct {
+    liveview.TemplateComponent
+}
 
 func (c *CounterComponent) Mount(socket *liveview.Socket) error {
-    socket.Assign("count", 0)
+    socket.Assign(map[string]interface{}{
+        "count": 0,
+    })
     return nil
 }
 
-func (c *CounterComponent) HandleEvent(event string, payload map[string]interface{}, socket *liveview.Socket) error {
-    count, _ := socket.Get("count")
-    currentCount := count.(int)
+// Events are automatically routed to Handle* methods
+func (c *CounterComponent) HandleIncrement(socket *liveview.Socket, payload map[string]interface{}) error {
+    count := socket.Assigns["count"].(int)
+    socket.Assign(map[string]interface{}{
+        "count": count + 1,
+    })
+    return nil
+}
 
-    switch event {
-    case "increment":
-        socket.Assign("count", currentCount+1)
-    case "decrement":
-        socket.Assign("count", currentCount-1)
-    }
-
+func (c *CounterComponent) HandleDecrement(socket *liveview.Socket, payload map[string]interface{}) error {
+    count := socket.Assigns["count"].(int)
+    socket.Assign(map[string]interface{}{
+        "count": count - 1,
+    })
     return nil
 }
 
@@ -123,6 +131,28 @@ func (c *CounterComponent) Render(socket *liveview.Socket) (template.HTML, error
         </div>
     `, count)
     return template.HTML(html), nil
+}
+```
+
+### Using Template Files
+
+Components can also render from HTML template files:
+
+```go
+type TodoListComponent struct {
+    liveview.TemplateComponent
+}
+
+func (t *TodoListComponent) Mount(socket *liveview.Socket) error {
+    t.TemplateDir = "examples/templates"
+    socket.Assign(map[string]interface{}{
+        "todos": []TodoItem{},
+    })
+    return nil
+}
+
+func (t *TodoListComponent) Render(socket *liveview.Socket) (template.HTML, error) {
+    return t.TemplateComponent.Render("todo.html", socket.Assigns)
 }
 ```
 
@@ -142,7 +172,7 @@ The example server includes multiple LiveView demonstrations:
 - **http://localhost:8080/todo** - Todo List (CRUD operations)
 - **http://localhost:8080/form** - Contact Form (with validation)
 - **http://localhost:8080/chat** - Real-time Chat
-- **http://localhost:8080/component-tag** - `<component>` tag examples
+- **http://localhost:8080/component-tag** - `<lv-component>` web component examples
 
 ## Core Components
 
