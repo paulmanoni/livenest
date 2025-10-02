@@ -1,4 +1,27 @@
-# LiveNest
+<p align="center">
+  <img src="./livenest_logo.png" alt="LiveNest Logo" width="400"/>
+</p>
+
+<h1 align="center">LiveNest 🪺</h1>
+<p align="center">
+  <b>Django-like Web Framework for Go</b><br/>
+  <i>with Phoenix LiveView-inspired real-time capabilities</i>
+</p>
+
+<p align="center">
+  <a href="https://github.com/paulmanoni/livenest/actions">
+    <img src="https://img.shields.io/github/actions/workflow/status/paulmanoni/livenest/ci.yml?branch=main" alt="Build Status"/>
+  </a>
+  <a href="https://pkg.go.dev/github.com/paulmanoni/livenest">
+    <img src="https://pkg.go.dev/badge/github.com/paulmanoni/livenest" alt="Go Reference"/>
+  </a>
+  <a href="https://goreportcard.com/report/github.com/paulmanoni/livenest">
+    <img src="https://goreportcard.com/badge/github.com/paulmanoni/livenest" alt="Go Report Card"/>
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"/>
+  </a>
+</p>
 
 A Django-like web framework for Go with Phoenix LiveView-inspired real-time capabilities.
 
