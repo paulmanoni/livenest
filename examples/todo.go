@@ -2,6 +2,7 @@ package main
 
 import (
 	"html/template"
+	"strconv"
 	"time"
 
 	"livenest/liveview"
@@ -63,12 +64,12 @@ func (t *TodoListComponent) HandleAdd(socket *liveview.Socket, payload map[strin
 
 // HandleToggle toggles a todo's completed status
 func (t *TodoListComponent) HandleToggle(socket *liveview.Socket, payload map[string]interface{}) error {
-	id, ok := payload["id"].(float64)
+	id, ok := payload["id"].(string)
 	if !ok {
 		return nil
 	}
 
-	todoID := int(id)
+	todoID, _ := strconv.Atoi(id)
 	todos := socket.Assigns["todos"].([]TodoItem)
 
 	for i := range todos {
