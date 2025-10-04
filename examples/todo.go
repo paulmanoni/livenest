@@ -124,15 +124,7 @@ func (t *TodoListComponent) HandleFilter(socket *liveview.Socket, payload map[st
 
 // HandleClearCompleted removes all completed todos
 func (t *TodoListComponent) HandleClearCompleted(socket *liveview.Socket, payload map[string]interface{}) error {
-	todos := socket.Assigns["todos"].([]TodoItem)
-	active := []TodoItem{}
-
-	for _, todo := range todos {
-		if !todo.Completed {
-			active = append(active, todo)
-		}
-	}
-
+	var active []TodoItem
 	socket.Assign(map[string]interface{}{
 		"todos": active,
 	})

@@ -81,8 +81,11 @@ func (h *Handler) HandleWebSocket(c *gin.Context) {
 		return
 	}
 
+	htmlStr := string(html)
+	socket.previousHTML = htmlStr // Store for future diffs
+
 	renderData := map[string]interface{}{
-		"html": string(html),
+		"html": htmlStr,
 	}
 	h.addFlashToData(socket, renderData)
 
@@ -123,9 +126,36 @@ func (h *Handler) HandleWebSocket(c *gin.Context) {
 			continue
 		}
 
-		renderData := map[string]interface{}{
-			"html": string(html),
+		htmlStr := string(html)
+
+		// Compute diff against previous render
+		diff, err := ComputeDiff(socket.previousHTML, htmlStr)
+		if err != nil {
+			log.Printf("Diff error: %v", err)
+			// Fall back to full HTML
+			diff = nil
 		}
+
+		socket.previousHTML = htmlStr // Update for next diff
+
+		renderData := make(map[string]interface{})
+
+		// If diff is nil or empty, no changes - skip sending
+		if diff == nil || len(diff) == 0 {
+			// Still check for flash messages
+			h.addFlashToData(socket, renderData)
+			if len(renderData) > 0 {
+				if err := h.sendMessage(conn, "render", renderData); err != nil {
+					log.Printf("Send error: %v", err)
+					break
+				}
+			}
+			continue
+		}
+
+		// Send diff instead of full HTML
+		renderData["diff"] = diff
+
 		h.addFlashToData(socket, renderData)
 
 		if err := h.sendMessage(conn, "render", renderData); err != nil {

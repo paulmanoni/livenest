@@ -29,17 +29,30 @@ Build real-time, interactive web applications with the simplicity of server-side
 
 ## Features
 
+### Core Framework
 - **Gin-based Routing**: Fast HTTP routing powered by Gin with fluent API
 - **GORM ORM**: Database access with GORM, supporting SQLite, PostgreSQL, and MySQL
-- **LiveView**: Real-time, interactive components using WebSockets
-- **Template Engine**: HTML template rendering with custom functions and file-based templates
 - **Django-like QuerySets**: Familiar API for database queries
 - **Configuration**: Support for JSON and TOML configuration files
-- **Flash Messages**: Built-in user notification system with success, error, info, and warning types
+- **Template Engine**: HTML template rendering with custom functions and file-based templates
+
+### LiveView (Phoenix-inspired)
+- **Real-time Components**: Interactive components using WebSockets
+- **Phoenix LiveView-style Diffing**: Efficient DOM updates using JSON diffs instead of full HTML
+- **Input Protection**: Prevents cursor jumping and race conditions while typing
 - **Event Routing**: Automatic routing of events to `Handle*` methods using reflection
-- **Form Validation**: Client-side and server-side validation support
+- **Event Attributes**: `lv-click`, `lv-change`, `lv-submit` for declarative event handling
+- **Debounced Updates**: Configurable debouncing with `lv-debounce` attribute
+- **Flash Messages**: Built-in notification system (success, error, info, warning)
 - **Component System**: Reusable components with `<lv-component>` web component tag
 - **Template Components**: File-based templates with `TemplateComponent` base class
+
+### Form Handling
+- **Auto-generated Forms**: Create forms automatically from Go structs using tags
+- **Type-safe Validation**: Struct tag-based validation (`required`, `email`, `min`, `max`, etc.)
+- **Real-time Validation**: Live validation feedback as users type
+- **Custom Validators**: Define custom validation logic with closures
+- **Multiple Field Types**: Support for text, email, password, number, checkbox, select, and more
 
 ## Project Structure
 
@@ -170,8 +183,12 @@ The example server includes multiple LiveView demonstrations:
 - **http://localhost:8080/counter-template** - Counter (file template)
 - **http://localhost:8080/dashboard** - Dashboard (subdirectory template)
 - **http://localhost:8080/todo** - Todo List (CRUD operations)
-- **http://localhost:8080/form** - Contact Form (with validation)
+- **http://localhost:8080/form** - Contact Form (manual validation)
 - **http://localhost:8080/chat** - Real-time Chat
+- **http://localhost:8080/registration** - User Registration (auto-generated form)
+- **http://localhost:8080/contact** - Contact Form (auto-generated)
+- **http://localhost:8080/review** - Product Review (auto-generated)
+- **http://localhost:8080/login** - Login Form (auto-generated)
 - **http://localhost:8080/component-tag** - `<lv-component>` web component examples
 
 ## Core Components
@@ -203,10 +220,41 @@ Real-time components with WebSocket communication:
 
 - `Component` interface for defining interactive components
 - `Socket` for managing state and assigns
-- Automatic DOM diffing and updates
+- **Phoenix LiveView-style diffing**: Server computes minimal JSON diffs, client applies patches efficiently
+- **Input typing protection**: Preserves user input and cursor position during server updates (prevents the "typing problem")
+- **Morphdom-style DOM patching**: Only updates changed elements while preserving form state
 - Flash messages for user notifications (`socket.PutFlash("success", "Message")`)
 - Event attributes: `lv-click`, `lv-change`, `lv-submit`
+- Debounced events: Use `lv-debounce="300"` to control update frequency
 - Automatic event routing to `Handle*` methods
+
+### Auto-generated Forms
+
+Create type-safe forms with validation using struct tags:
+
+```go
+type UserRegistration struct {
+    Name     string `form:"label:Full Name" validate:"required"`
+    Email    string `form:"type:email,label:Email Address" validate:"required,email"`
+    Password string `form:"type:password,label:Password" validate:"required,min:8"`
+    Age      int    `form:"type:number,label:Age" validate:"required,min:18,max:100"`
+    Terms    bool   `form:"type:checkbox,label:I agree to terms" validate:"required"`
+}
+
+// Create form component
+form := liveview.NewForm(UserRegistration{}, func(data UserRegistration, socket *liveview.Socket) error {
+    // Handle successful submission
+    socket.PutFlash("success", "Registration successful!")
+    return nil
+})
+```
+
+Supported validation rules:
+- `required` - Field must not be empty
+- `email` - Valid email format
+- `min:N` - Minimum value/length
+- `max:N` - Maximum value/length
+- Custom validators with closures
 
 ### Template Engine
 
@@ -246,7 +294,7 @@ app := core.New(config)
 ## Roadmap
 
 - [ ] Admin interface (Django-like)
-- [ ] Form handling and validation
+- [x] Form handling and validation
 - [ ] Authentication and authorization
 - [ ] Migrations system
 - [ ] CLI tool for scaffolding
@@ -255,6 +303,7 @@ app := core.New(config)
 - [ ] CSRF protection
 - [ ] File uploads
 - [ ] Testing utilities
+- [x] LiveView Diffing on Frontend and Backend
 
 ## Contributing
 

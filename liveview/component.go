@@ -21,10 +21,11 @@ type EventHandler interface {
 
 // Socket represents a LiveView socket connection
 type Socket struct {
-	ID          string
-	ComponentID string
-	Session     *Session
-	Assigns     map[string]interface{}
+	ID           string
+	ComponentID  string
+	Session      *Session
+	Assigns      map[string]interface{}
+	previousHTML string // Track previous render for diffing
 }
 
 // NewSocket creates a new socket

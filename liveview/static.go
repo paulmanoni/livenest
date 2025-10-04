@@ -1,18 +1,24 @@
 package liveview
 
-import "strings"
+import (
+	_ "embed"
+	"strings"
+)
+
+//go:embed static/liveview.js
+var liveviewJS string
 
 // GetLiveViewJS returns the LiveView client JavaScript
 func GetLiveViewJS() string {
 	// Combine LiveView socket + Component tag
 	var js strings.Builder
-	js.WriteString(getLiveViewSocketJS())
+	js.WriteString(liveviewJS)
 	js.WriteString("\n\n")
 	js.WriteString(GetComponentTagJS())
 	return js.String()
 }
 
-// getLiveViewSocketJS returns just the socket implementation
+// getLiveViewSocketJS returns just the socket implementation (deprecated, kept for compatibility)
 func getLiveViewSocketJS() string {
 	return `// LiveNest LiveView Client
 class LiveViewSocket {

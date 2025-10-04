@@ -5,7 +5,6 @@ import (
 
 	"livenest/core"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
 )
 
@@ -69,74 +68,29 @@ func main() {
 		AddComponent(&ChatComponent{}).WithName("chat").
 		Build()
 
-	// Component tag example page
+	// Register new form examples with auto-generation
 	app.NewHandler().
-		Path("/component-tag").
-		AsGet().
-		Func(func(c *gin.Context) {
-			c.Header("Content-Type", "text/html; charset=utf-8")
-			html := `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LiveNest Component Tag Example</title>
-    <script src="/livenest/liveview.js"></script>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        component {
-            display: block;
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-        }
-    </style>
-</head>
-<body>
-    <h1>LiveNest Component Tag Examples</h1>
-
-    <div class="container">
-        <component name="counter" id="counter-1"></component>
-        <component name="counter" id="counter-2"></component>
-        <component name="counter" id="counter-3"></component>
-    </div>
-
-    <script>
-        document.querySelectorAll('component').forEach(comp => {
-            comp.addEventListener('component-loaded', (e) => {
-                console.log('Component loaded:', e.detail);
-            });
-        });
-    </script>
-</body>
-</html>`
-			c.Data(200, "text/html; charset=utf-8", []byte(html))
-		}).
+		Path("/registration").
+		AsLive().
+		AddComponent(NewUserForm()).WithName("user-registration").
 		Build()
 
-	// API route example
 	app.NewHandler().
-		Path("/api/hello").
-		AsGet().
-		Func(func(c *gin.Context) {
-			c.JSON(200, gin.H{"message": "Hello from LiveNest!"})
-		}).
+		Path("/contact").
+		AsLive().
+		AddComponent(NewContactForm()).WithName("contact").
+		Build()
+
+	app.NewHandler().
+		Path("/review").
+		AsLive().
+		AddComponent(NewProductReview()).WithName("product-review").
+		Build()
+
+	app.NewHandler().
+		Path("/login").
+		AsLive().
+		AddComponent(NewLoginForm()).WithName("login").
 		Build()
 
 	// Serve static files
@@ -150,8 +104,12 @@ func main() {
 	log.Println("  http://localhost:8080/counter-template - Counter (file template)")
 	log.Println("  http://localhost:8080/dashboard        - Dashboard (subdirectory template)")
 	log.Println("  http://localhost:8080/todo             - Todo List (CRUD operations)")
-	log.Println("  http://localhost:8080/form             - Contact Form (with validation)")
+	log.Println("  http://localhost:8080/form             - Contact Form (old implementation)")
 	log.Println("  http://localhost:8080/chat             - Real-time Chat")
+	log.Println("  http://localhost:8080/registration     - User Registration (auto-generated)")
+	log.Println("  http://localhost:8080/contact          - Contact Form (auto-generated)")
+	log.Println("  http://localhost:8080/review           - Product Review (auto-generated)")
+	log.Println("  http://localhost:8080/login            - Login Form (auto-generated)")
 	log.Println("  http://localhost:8080/component-tag    - <component> tag examples")
 	if err := app.Run(":8080"); err != nil {
 		log.Fatalf("Server error: %v", err)
