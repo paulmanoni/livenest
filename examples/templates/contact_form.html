@@ -1,0 +1,220 @@
+<div class="form-container">
+    <h1>✉️ Contact Us</h1>
+
+    {{if .submitted}}
+    <div class="success-message">
+        <h2>✅ Message Sent!</h2>
+        <p>Thank you for contacting us, <strong>{{.formData.Name}}</strong>!</p>
+        <p>We'll get back to you at <strong>{{.formData.Email}}</strong> soon.</p>
+        <button lv-click="reset" class="btn-primary">Send Another Message</button>
+    </div>
+    {{else}}
+    <form class="contact-form">
+        <div class="form-group">
+            <label for="name">Name *</label>
+            <input
+                type="text"
+                id="name"
+                value="{{.formData.Name}}"
+                lv-change="change"
+                lv-value-field="Name"
+                class="{{if index .errors "Name"}}error{{end}}"
+                placeholder="Your full name"
+            />
+            {{if index .errors "Name"}}
+            <span class="error-message">{{index .errors "Name"}}</span>
+            {{end}}
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email *</label>
+            <input
+                type="email"
+                id="email"
+                value="{{.formData.Email}}"
+                lv-change="change"
+                lv-value-field="Email"
+                class="{{if index .errors "Email"}}error{{end}}"
+                placeholder="your.email@example.com"
+            />
+            {{if index .errors "Email"}}
+            <span class="error-message">{{index .errors "Email"}}</span>
+            {{end}}
+        </div>
+
+        <div class="form-group">
+            <label for="subject">Subject *</label>
+            <input
+                type="text"
+                id="subject"
+                value="{{.formData.Subject}}"
+                lv-change="change"
+                lv-value-field="Subject"
+                class="{{if index .errors "Subject"}}error{{end}}"
+                placeholder="What is this about?"
+            />
+            {{if index .errors "Subject"}}
+            <span class="error-message">{{index .errors "Subject"}}</span>
+            {{end}}
+        </div>
+
+        <div class="form-group">
+            <label for="message">Message *</label>
+            <textarea
+                id="message"
+                rows="6"
+                lv-change="change"
+                lv-value-field="Message"
+                class="{{if index .errors "Message"}}error{{end}}"
+                placeholder="Your message (10-1000 characters)"
+            >{{.formData.Message}}</textarea>
+            {{if index .errors "Message"}}
+            <span class="error-message">{{index .errors "Message"}}</span>
+            {{end}}
+        </div>
+
+        <div class="form-actions">
+            <button type="button" lv-click="submit" class="btn-primary">Send Message</button>
+            <button type="button" lv-click="reset" class="btn-secondary">Clear</button>
+        </div>
+    </form>
+    {{end}}
+</div>
+
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .form-container h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 30px;
+    }
+
+    .contact-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #34495e;
+        font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+
+    .form-group input.error,
+    .form-group textarea.error {
+        border-color: #e74c3c;
+    }
+
+    .error-message {
+        color: #e74c3c;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        flex: 1;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary {
+        background: #3498db;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #2980b9;
+    }
+
+    .btn-secondary {
+        background: #95a5a6;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #7f8c8d;
+    }
+
+    .success-message {
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .success-message h2 {
+        color: #27ae60;
+        margin-bottom: 20px;
+    }
+
+    .success-message p {
+        font-size: 16px;
+        color: #34495e;
+        margin: 10px 0;
+    }
+
+    .success-message button {
+        margin-top: 30px;
+        padding: 12px 30px;
+    }
+</style>
+
+<script>
+    // Handle form input changes
+    document.querySelectorAll('[lv-change]').forEach(input => {
+        input.addEventListener('change', function() {
+            const field = this.getAttribute('lv-value-field');
+            const value = this.type === 'checkbox' ? this.checked.toString() : this.value;
+            window.liveSocket.pushEvent('change', { field, value });
+        });
+
+        // Also handle input event for real-time validation
+        if (this.tagName !== 'INPUT' || this.type !== 'checkbox') {
+            input.addEventListener('input', function() {
+                const field = this.getAttribute('lv-value-field');
+                window.liveSocket.pushEvent('change', { field, value: this.value });
+            });
+        }
+    });
+</script>

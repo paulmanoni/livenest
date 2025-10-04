@@ -1,0 +1,282 @@
+<div class="form-container">
+    <h1>👤 User Registration</h1>
+
+    {{if .submitted}}
+    <div class="success-message">
+        <h2>✅ Registration Successful!</h2>
+        <p>Welcome, <strong>{{.formData.Username}}</strong>!</p>
+        <p>We've sent a confirmation email to <strong>{{.formData.Email}}</strong></p>
+        <button lv-click="reset" class="btn-primary">Register Another User</button>
+    </div>
+    {{else}}
+    <form class="contact-form">
+        <div class="form-group">
+            <label for="username">Username *</label>
+            <input
+                type="text"
+                id="username"
+                value="{{.formData.Username}}"
+                lv-change="change"
+                lv-value-field="Username"
+                class="{{if index .errors "Username"}}error{{end}}"
+                placeholder="Enter username (3-20 characters)"
+            />
+            {{if index .errors "Username"}}
+            <span class="error-message">{{index .errors "Username"}}</span>
+            {{end}}
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email *</label>
+            <input
+                type="email"
+                id="email"
+                value="{{.formData.Email}}"
+                lv-change="change"
+                lv-value-field="Email"
+                class="{{if index .errors "Email"}}error{{end}}"
+                placeholder="your.email@example.com"
+            />
+            {{if index .errors "Email"}}
+            <span class="error-message">{{index .errors "Email"}}</span>
+            {{end}}
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password *</label>
+            <input
+                type="password"
+                id="password"
+                value="{{.formData.Password}}"
+                lv-change="change"
+                lv-value-field="Password"
+                class="{{if index .errors "Password"}}error{{end}}"
+                placeholder="Min 8 characters, 1 uppercase, 1 lowercase, 1 number"
+            />
+            {{if index .errors "Password"}}
+            <span class="error-message">{{index .errors "Password"}}</span>
+            {{end}}
+        </div>
+
+        <div class="form-group">
+            <label for="confirm-password">Confirm Password *</label>
+            <input
+                type="password"
+                id="confirm-password"
+                value="{{.formData.ConfirmPassword}}"
+                lv-change="change"
+                lv-value-field="ConfirmPassword"
+                class="{{if index .errors "ConfirmPassword"}}error{{end}}"
+                placeholder="Re-enter your password"
+            />
+            {{if index .errors "ConfirmPassword"}}
+            <span class="error-message">{{index .errors "ConfirmPassword"}}</span>
+            {{end}}
+        </div>
+
+        <div class="form-group">
+            <label for="age">Age *</label>
+            <input
+                type="text"
+                id="age"
+                value="{{.formData.Age}}"
+                lv-change="change"
+                lv-value-field="Age"
+                class="{{if index .errors "Age"}}error{{end}}"
+                placeholder="13-120"
+            />
+            {{if index .errors "Age"}}
+            <span class="error-message">{{index .errors "Age"}}</span>
+            {{end}}
+        </div>
+
+        <div class="form-group">
+            <label for="bio">Bio (Optional)</label>
+            <textarea
+                id="bio"
+                rows="4"
+                lv-change="change"
+                lv-value-field="Bio"
+                class="{{if index .errors "Bio"}}error{{end}}"
+                placeholder="Tell us about yourself (max 500 characters)"
+            >{{.formData.Bio}}</textarea>
+            {{if index .errors "Bio"}}
+            <span class="error-message">{{index .errors "Bio"}}</span>
+            {{end}}
+        </div>
+
+        <div class="form-group checkbox-group">
+            <label>
+                <input
+                    type="checkbox"
+                    id="terms"
+                    {{if .formData.AcceptTerms}}checked{{end}}
+                    lv-change="change"
+                    lv-value-field="AcceptTerms"
+                />
+                I accept the terms and conditions *
+            </label>
+            {{if index .errors "AcceptTerms"}}
+            <span class="error-message">{{index .errors "AcceptTerms"}}</span>
+            {{end}}
+        </div>
+
+        <div class="form-actions">
+            <button type="button" lv-click="submit" class="btn-primary">Register</button>
+            <button type="button" lv-click="reset" class="btn-secondary">Reset</button>
+        </div>
+    </form>
+    {{end}}
+</div>
+
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .form-container h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 30px;
+    }
+
+    .contact-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #34495e;
+        font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+
+    .form-group input.error,
+    .form-group textarea.error {
+        border-color: #e74c3c;
+    }
+
+    .error-message {
+        color: #e74c3c;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .checkbox-group label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 400;
+        cursor: pointer;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        flex: 1;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary {
+        background: #3498db;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #2980b9;
+    }
+
+    .btn-secondary {
+        background: #95a5a6;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #7f8c8d;
+    }
+
+    .success-message {
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .success-message h2 {
+        color: #27ae60;
+        margin-bottom: 20px;
+    }
+
+    .success-message p {
+        font-size: 16px;
+        color: #34495e;
+        margin: 10px 0;
+    }
+
+    .success-message button {
+        margin-top: 30px;
+        padding: 12px 30px;
+    }
+</style>
+
+<script>
+    // Handle form input changes
+    document.querySelectorAll('[lv-change]').forEach(input => {
+        input.addEventListener('change', function() {
+            const field = this.getAttribute('lv-value-field');
+            const value = this.type === 'checkbox' ? this.checked.toString() : this.value;
+            window.liveSocket.pushEvent('change', { field, value });
+        });
+
+        // Also handle input event for real-time validation
+        if (this.tagName !== 'INPUT' || this.type !== 'checkbox') {
+            input.addEventListener('input', function() {
+                const field = this.getAttribute('lv-value-field');
+                window.liveSocket.pushEvent('change', { field, value: this.value });
+            });
+        }
+    });
+</script>
