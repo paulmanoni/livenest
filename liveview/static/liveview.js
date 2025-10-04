@@ -90,8 +90,17 @@ class LiveViewSocket {
     }
 
     connectWebSocket() {
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const wsUrl = `${protocol}//${window.location.host}/live/ws/${this.componentName}?socket_id=${this.socketId}`;
+        const container = document.getElementById('liveview');
+
+        // Allow full WebSocket URL override via data-ws-url attribute
+        let wsUrl = container?.dataset.wsUrl;
+
+        if (!wsUrl) {
+            // Otherwise construct from protocol, host, and configurable path
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsPath = container?.dataset.wsPath || '/live/ws';
+            wsUrl = `${protocol}//${window.location.host}${wsPath}/${this.componentName}?socket_id=${this.socketId}`;
+        }
 
         this.ws = new WebSocket(wsUrl);
 
