@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"html/template"
 
-	"livenest/liveview"
+	"github.com/paulmanoni/livenest/liveview"
 )
 
 // CounterComponent is a simple counter LiveView component

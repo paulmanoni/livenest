@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"math/rand"
 
-	"livenest/liveview"
+	"github.com/paulmanoni/livenest/liveview"
 )
 
 // DashboardComponent demonstrates template file usage with subdirectories

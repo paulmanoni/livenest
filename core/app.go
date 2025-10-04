@@ -3,7 +3,7 @@ package core
 import (
 	"log"
 
-	"livenest/liveview"
+	"github.com/paulmanoni/livenest/liveview"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

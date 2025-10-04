@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"livenest/liveview"
+	"github.com/paulmanoni/livenest/liveview"
 )
 
 // UserForm with validation tags

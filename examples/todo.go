@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"livenest/liveview"
+	"github.com/paulmanoni/livenest/liveview"
 )
 
 // TodoItem represents a single todo item

@@ -1,7 +1,7 @@
 package core
 
 import (
-	"livenest/liveview"
+	"github.com/paulmanoni/livenest/liveview"
 )
 
 // RegisterWebComponent registers a custom web component with validation

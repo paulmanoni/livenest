@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	"livenest/liveview"
+	"github.com/paulmanoni/livenest/liveview"
 )
 
 // FormComponent demonstrates form handling with validation
@@ -16,10 +16,10 @@ type FormComponent struct {
 
 // FormData holds the form values
 type FormData struct {
-	Name     string
-	Email    string
-	Age      string
-	Message  string
+	Name        string
+	Email       string
+	Age         string
+	Message     string
 	AcceptTerms bool
 }
 
@@ -29,8 +29,8 @@ type ValidationErrors map[string]string
 // Mount initializes the form component
 func (f *FormComponent) Mount(socket *liveview.Socket) error {
 	socket.Assign(map[string]interface{}{
-		"formData": FormData{},
-		"errors":   ValidationErrors{},
+		"formData":  FormData{},
+		"errors":    ValidationErrors{},
 		"submitted": false,
 	})
 	return nil
@@ -117,8 +117,8 @@ func (f *FormComponent) HandleSubmit(socket *liveview.Socket, payload map[string
 // HandleReset resets the form
 func (f *FormComponent) HandleReset(socket *liveview.Socket, payload map[string]interface{}) error {
 	socket.Assign(map[string]interface{}{
-		"formData": FormData{},
-		"errors":   ValidationErrors{},
+		"formData":  FormData{},
+		"errors":    ValidationErrors{},
 		"submitted": false,
 	})
 	socket.PutFlash("info", "Form reset")

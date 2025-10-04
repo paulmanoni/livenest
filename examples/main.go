@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"livenest/core"
+	"github.com/paulmanoni/livenest/core"
 
 	"gorm.io/driver/sqlite"
 )

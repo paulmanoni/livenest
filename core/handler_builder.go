@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"livenest/liveview"
+	"github.com/paulmanoni/livenest/liveview"
 
 	"github.com/gin-gonic/gin"
 )

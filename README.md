@@ -80,7 +80,7 @@ go get livenest
 package main
 
 import (
-    "livenest/core"
+    "github.com/paulmanoni/livenest/core"
     "gorm.io/driver/sqlite"
 )
 
@@ -111,8 +111,8 @@ package main
 import (
     "fmt"
     "html/template"
-    "livenest/core"
-    "livenest/liveview"
+    "github.com/paulmanoni/livenest/core"
+    "github.com/paulmanoni/livenest/liveview"
     "gorm.io/driver/sqlite"
 )
 

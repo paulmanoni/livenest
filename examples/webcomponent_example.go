@@ -1,8 +1,8 @@
 package main
 
 import (
-	"livenest/core"
-	"livenest/liveview"
+	"github.com/paulmanoni/livenest/core"
+	"github.com/paulmanoni/livenest/liveview"
 )
 
 func setupWebComponents(app *core.App) {
