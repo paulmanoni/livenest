@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"livenest/liveview"
+	"github.com/paulmanoni/livenest/liveview"
 )
 
 // ChatMessage represents a single chat message
@@ -35,9 +35,9 @@ func (ch *ChatComponent) Mount(socket *liveview.Socket) error {
 	username := fmt.Sprintf("User%d", time.Now().Unix()%1000)
 
 	socket.Assign(map[string]interface{}{
-		"username": username,
+		"username":   username,
 		"newMessage": "",
-		"messages": getChatMessages(),
+		"messages":   getChatMessages(),
 	})
 	return nil
 }
@@ -57,7 +57,7 @@ func (ch *ChatComponent) HandleSend(socket *liveview.Socket, payload map[string]
 	// Update local state
 	socket.Assign(map[string]interface{}{
 		"newMessage": "",
-		"messages": getChatMessages(),
+		"messages":   getChatMessages(),
 	})
 
 	return nil
