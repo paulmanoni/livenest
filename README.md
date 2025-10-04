@@ -106,10 +106,22 @@ func main() {
 Create an interactive counter component with automatic event routing:
 
 ```go
+package main
+
+import (
+    "fmt"
+    "html/template"
+    "livenest/core"
+    "livenest/liveview"
+    "gorm.io/driver/sqlite"
+)
+
+// CounterComponent is a simple counter LiveView component
 type CounterComponent struct {
     liveview.TemplateComponent
 }
 
+// Mount initializes the counter component
 func (c *CounterComponent) Mount(socket *liveview.Socket) error {
     socket.Assign(map[string]interface{}{
         "count": 0,
@@ -134,18 +146,52 @@ func (c *CounterComponent) HandleDecrement(socket *liveview.Socket, payload map[
     return nil
 }
 
+func (c *CounterComponent) HandleReset(socket *liveview.Socket, payload map[string]interface{}) error {
+    socket.Assign(map[string]interface{}{
+        "count": 0,
+    })
+    return nil
+}
+
+// Render returns the HTML for the counter component
 func (c *CounterComponent) Render(socket *liveview.Socket) (template.HTML, error) {
     count, _ := socket.Get("count")
     html := fmt.Sprintf(`
-        <div>
-            <h2>Count: %d</h2>
-            <button lv-click="decrement">-</button>
-            <button lv-click="increment">+</button>
+        <div class="counter">
+            <h1>LiveView Counter</h1>
+            <div class="count-display">
+                <h2>Count: %d</h2>
+            </div>
+            <div class="buttons">
+                <button lv-click="decrement">-</button>
+                <button lv-click="reset">Reset</button>
+                <button lv-click="increment">+</button>
+            </div>
         </div>
     `, count)
     return template.HTML(html), nil
 }
+
+func main() {
+    // Create app
+    app := core.New(nil)
+
+    // Connect to database
+    app.ConnectDB(sqlite.Open("example.db"))
+
+    // Register LiveView route
+    app.NewHandler().
+        Path("/").
+        AsLive().
+        AddComponent(&CounterComponent{}).
+        Build()
+
+    // Start server
+    app.Run(":8080")
+}
 ```
+
+The counter updates in real-time using WebSockets. The server sends only the minimal diff (e.g., just the count value changed), and the client efficiently patches the DOM without full page reloads.
 
 ### Using Template Files
 
