@@ -1,4 +1,4 @@
-module livenest
+module github.com/paulmanoni/livenest
 
 go 1.23
 
